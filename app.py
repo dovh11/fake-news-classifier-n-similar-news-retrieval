@@ -142,7 +142,7 @@ if st.button("Analyze Article", type="primary"):
                 st.error("🚨 This article appears to be **FAKE NEWS**.")
                 
             # 4. Retrieve Similar Articles
-            st.subheader("🔍 Top 3 Similar Articles in Database")
+            st.subheader("🔍 Top 5 Similar Articles in Database")
             doc_embs = np.vstack(df['embedding'].values)
             similarities = cosine_similarity(query_emb.reshape(1, -1), doc_embs)[0]
             top_indices = np.argsort(similarities)[::-1][:5]
