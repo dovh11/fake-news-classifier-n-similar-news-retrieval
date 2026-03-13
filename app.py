@@ -43,20 +43,20 @@ def get_document_embedding(text, embeddings, dim):
         return np.zeros(dim)
     return np.mean(valid_vectors, axis=0)
 
-@st.cache_resource(show_spinner="Loading and Preprocessing Dataset...")
+@st.cache_resource(show_spinner="Đang tải và xử lý dữ liệu...")
 def load_and_embed_data(_embeddings):
-    # Dynamically check for standard or zipped CSVs to bypass GitHub 25MB limits
-    true_path = 'True.zip' if os.path.exists('True.zip') else ('True.csv.zip' if os.path.exists('True.csv.zip') else 'True.csv')
-    fake_path = 'Fake.zip' if os.path.exists('Fake.zip') else ('Fake.csv.zip' if os.path.exists('Fake.csv.zip') else 'Fake.csv')
+    # Kiểm tra file CSV hoặc ZIP trong thư mục 'data' để tránh giới hạn 25MB của GitHub
+    true_path = 'data/True.zip' if os.path.exists('data/True.zip') else ('data/True.csv.zip' if os.path.exists('data/True.csv.zip') else 'data/True.csv')
+    fake_path = 'data/Fake.zip' if os.path.exists('data/Fake.zip') else ('data/Fake.csv.zip' if os.path.exists('data/Fake.csv.zip') else 'data/Fake.csv')
     
     if not os.path.exists(true_path) or not os.path.exists(fake_path):
-        st.error("Dataset missing! Please ensure True.csv/Fake.csv (or their .zip versions) are in the folder.")
+        st.error("Thiếu dữ liệu! Vui lòng đảm bảo các file True và Fake (hoặc bản .zip) đã được đặt trong thư mục 'data/'.")
         st.stop()
         
     df_true = pd.read_csv(true_path)
     df_fake = pd.read_csv(fake_path)
     
-    # Remove data leakage watermark
+    # Xóa watermark tránh rò rỉ dữ liệu
     df_true['text'] = df_true['text'].apply(
         lambda x: x.split(' - ', 1)[1] if isinstance(x, str) and ' - ' in x[:100] else x
     )
@@ -96,7 +96,7 @@ def train_model(_df):
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.01)
     
-    epochs = 100
+    epochs = 50
     for epoch in range(epochs):
         model.train()
         optimizer.zero_grad()
@@ -142,10 +142,10 @@ if st.button("Analyze Article", type="primary"):
                 st.error("🚨 This article appears to be **FAKE NEWS**.")
                 
             # 4. Retrieve Similar Articles
-            st.subheader("🔍 Top 5 Similar Articles in Database")
+            st.subheader("🔍 Top 3 Similar Articles in Database")
             doc_embs = np.vstack(df['embedding'].values)
             similarities = cosine_similarity(query_emb.reshape(1, -1), doc_embs)[0]
-            top_indices = np.argsort(similarities)[::-1][:5]
+            top_indices = np.argsort(similarities)[::-1][:3]
             
             for i, idx in enumerate(top_indices):
                 sim_score = similarities[idx]
