@@ -3,7 +3,7 @@
 
 **Live Web App:** https://fake-news-classifier-n-similar-news-retrieval-5ffa2vlvqqytls4t.streamlit.app/
 
-**Colab Notebook:**: https://colab.research.google.com/drive/1R796ggYNmmkvpTYWzAHhLsPbD_tlA-7k?usp=sharing
+**Colab Notebook:**: https://colab.research.google.com/drive/11kmVPUFiapPsyxTU-2N2Beh8EwTSxX7L?usp=sharing
 
 This project is an interactive web application that leverages foundational Natural Language Processing (NLP) techniques to classify news articles as **Real** or **Fake**. Additionally, it acts as a semantic search engine, retrieving the top 3 most similar articles from the database based on the user's input.
 
